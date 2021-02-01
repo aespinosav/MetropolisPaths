@@ -1,6 +1,3 @@
-using StatsBase
-include("./microstate.jl")
-
 """
 Generates new proposed state from a given microstate by doing the splicing
 procedure in Flötteröd & Bierlaire 2013 (TR: Part B).
