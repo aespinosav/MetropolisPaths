@@ -1,6 +1,15 @@
 """
 Generates new proposed state from a given microstate by doing the splicing
 procedure in Flötteröd & Bierlaire 2013 (TR: Part B).
+
+    splice(g, p_insert, state)
+    
+    g:          Graph
+    p_insert:   Probability distribution over nodes in g
+    state:      Micro state (made up of Γ, a, b, c)
+
+Given a micro state (i.e. a Path and anchor points a, c and pivot b) generates
+a proposed state (potentially the same) for a transition in the MH algorithm.
 """
 function splice(g, p_insert, state)
 
@@ -11,7 +20,7 @@ function splice(g, p_insert, state)
     p_ν = p_insert[insertion_set]
     ν = sample(insertion_set, p_ν) # insertion node
     
-    dist_mat = LightGraphs.weights(g)
+    dist_mat = copy(LightGraphs.weights(g))
     for i in append!(state.Γ[1:state.a-1], state.Γ[state.c:end])
         for j in outneighbors(g, i)
             dist_mat[i,j] = Inf
@@ -47,4 +56,42 @@ function splice(g, p_insert, state)
     new_c = new_b + length(Γ₂) - 1
     
     MicroState(new_Γ, new_a, new_b, new_c)
+end
+
+"""
+Returns true or false depending if state is `spliceable` as defined in 
+Flötteröd & Bierlaire 2013 (TR: Part B)
+
+    is_spliceable(state, g, geodesic_dist_matrix)
+    
+    state:                  MicroState
+    g:                      SimpleWeightedDiGraph
+    geodesic_dist_matrix:   Matrix with shortest path distances
+"""
+function is_spliceable(state, g, geodesic_dist_matrix)
+
+    node_a = state.Γ[state.a]
+    node_b = state.Γ[state.b]
+    node_c = state.Γ[state.c]
+    
+    gd1 = geodesic_dist_matrix[node_a, node_b]
+    gd2 = geodesic_dist_matrix[node_b, node_c]
+    
+    Γ₁_length = 0
+    for i in state.a:state.b-1
+        s, d = state.Γ[i:i+1]
+        Γ₁_length += g.weights[s,d]
+    end
+         
+    Γ₂_length = 0    
+    for i in state.b:state.c-1
+        s, d = state.Γ[i:i+1]
+        Γ₂_length += g.weights[s,d]
+    end
+    
+    if Γ₁_length == gd1 && Γ₂_length ==gd2
+        return true
+    else
+        return false
+    end
 end

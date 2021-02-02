@@ -1,5 +1,5 @@
 #Adjacency matrix for a braess network
-using LightGraphs, SimpleWeightedGraphs, StatsBase
+using LightGraphs, SimpleWeightedGraphs, StatsBase, MHPaths
 
 """
 Calculates matrix of shortest path distances
@@ -58,28 +58,45 @@ g = SimpleWeightedDiGraph(A_braess)
 
 state = MicroState([1,2,3,4], 1, 2, 4)
 
-insertion_set = setdiff(vertices(g),
-                        state.Γ[1:state.a-1],
-                        state.Γ[state.c:end])
-
 pp = StatsBase.Weights(ones(nv(g)))
 
-p_ν = pp[insertion_set]
-ν = sample(insertion_set, p_ν) # insertion node
 
-dist_mat_alt = LightGraphs.weights(g)
-for i in append!(state.Γ[1:state.a-1], state.Γ[state.c:end])
-    for j in outneighbors(g, i)
-        global dist_mat_alt[i,j] = Inf
+
+######################################
+
+
+function is_spliceable(state, g, geodesic_dist_matrix)
+
+    node_a = state.Γ[state.a]
+    node_b = state.Γ[state.b]
+    node_c = state.Γ[state.c]
+    
+    gd1 = geodesic_dist_matrix[node_a, node_b]
+    gd2 = geodesic_dist_matrix[node_b, node_c]
+    
+    Γ₁_length = 0
+    for i in state.a:state.b-1
+        s, d = state.Γ[i:i+1]
+        Γ₁_length += g.weights[s,d]
     end
-    for j in inneighbors(g, i)
-        global dist_mat_alt[j,i] = Inf
+         
+    Γ₂_length = 0    
+    for i in state.b:state.c-1
+        s, d = state.Γ[i:i+1]
+        Γ₂_length += g.weights[s,d]
+    end
+    
+    if Γ₁_length == gd1 && Γ₂_length ==gd2
+        return true
+    else
+        return false
     end
 end
 
-ds = dijkstra_shortest_paths(g, state.Γ[state.a], dist_mat_alt)
-paths1 = enumerate_paths(ds, ν)
-Γ₁ = paths1
+
+
+#######################################
+
 
 #Geodesic distance matrix for braess network
 d_mat = geod_dist_mat(g)
