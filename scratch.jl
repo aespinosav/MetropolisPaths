@@ -43,28 +43,6 @@ mutable struct MicroState
     c::Int64 # Second anchor
 end
 
-########################################################################
-########################################################################
-
-
-#Braess network
-A_braess = [0 1 1 0 
-            0 0 1 1
-            0 0 0 1 
-            0 0 0 0]
-A_braess = Float64.(A_braess)
-g = SimpleWeightedDiGraph(A_braess)
-
-
-state = MicroState([1,2,3,4], 1, 2, 4)
-
-pp = StatsBase.Weights(ones(nv(g)))
-
-
-
-######################################
-
-
 function is_spliceable(state, g, geodesic_dist_matrix)
 
     node_a = state.Γ[state.a]
@@ -94,8 +72,24 @@ function is_spliceable(state, g, geodesic_dist_matrix)
 end
 
 
+########################################################################
+########################################################################
 
-#######################################
+
+#Braess network
+A_braess = [0 1 1 0 
+            0 0 1 1
+            0 0 0 1 
+            0 0 0 0]
+A_braess = Float64.(A_braess)
+g = SimpleWeightedDiGraph(A_braess)
+
+pp = StatsBase.Weights(ones(nv(g)))
+
+state = MicroState([1,2,3,4], 1, 2, 4)
+
+
+
 
 
 #Geodesic distance matrix for braess network
@@ -116,4 +110,29 @@ for v in vertices(g)
 end
 # Use of global needed for REPL in v1.4 (careful with scoping)
 
+
+############################################################################
+############################################################################
+
+
+#Braess network
+A_braess = [0 1 1 0 
+            0 0 1 1
+            0 0 0 1 
+            0 0 0 0]
+A_braess = Float64.(A_braess)
+g = SimpleWeightedDiGraph(A_braess)
+d_mat = geod_dist_mat(g)
+
+o = 1
+d = 4
+
+μ = 0.5
+
+p_insert = make_p_insert_with_denom(o, d, g, μ, d_mat)
+p_dist = StatsBase.Weights([p_insert(v) for v in vertices(g)])
+
+state = MicroState([1,2,3,4], 1, 2, 4)
+
+splice(g, p_dist, state)
 
