@@ -29,21 +29,23 @@ function MHInstance(g, o, d, μ, p_splice)
     
     N = length(vertices(g))
     
-    dist_mat = g.weights'
-    initial_path = begin
-                       ds = dijkstra_shortest_paths(g, o, dist_mat)
-                       path = enumerate_paths(ds, d)
-                   end
+    fs = floyd_warshall_shortest_paths(g)
+
+    geodesic_distance_matrix = geod_dist_mat_fs_in(g, fs)
+ 
+    initial_path = enumerate_paths(fs, o, d)
+
+    # Initial sampling weights uniform for the first microstate
+    n_in_p = length(initial_path)
     
-    geodesic_distance_matrix = geod_dist_mat(g)
-    
-    # Initla sampling weights uniform for the first microstate
-    weights_init = StatsBase.Weights(ones(length(initial_path)))              
-    anchors = sample(1:length(initial_path), 
+    weights_init = StatsBase.Weights(ones(n_in_p))
+                 
+    anchors = sample(1:n_in_p, 
                      weights_init,
                      3,
                      replace=false,
-                     ordered=true)                 
+                     ordered=true)     
+                                 
     # Initial state is shortest path with random anchors
     initial_state = MicroState(initial_path, anchors...)
     
