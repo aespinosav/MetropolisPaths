@@ -183,4 +183,4 @@ d = 4
 μ = 0.5
 p_splice = 0.5
 
-MHinstance(g, o, d, μ, p_splice)
+MHInstance(g, o, d, μ, p_splice)
