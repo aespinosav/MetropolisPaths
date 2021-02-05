@@ -8,7 +8,7 @@ export
     # From metropolis.jl
     MHInstance,
     # From distance_mat.jl
-    geod_dist_mat, path_length,
+    geod_dist_mat_fs_in, geod_dist_mat, path_length,
     # From splice.jl
     splice, is_spliceable,
     # From shuffle.jl
