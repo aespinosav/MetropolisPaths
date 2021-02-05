@@ -1,11 +1,8 @@
 """
-Calculates matrix of shortest path distances.
-Uses Floyd Warshal algorithm and needs a WeightedGraph
+Calculates matrix of shortest path distances from a Floyd-Warshal state
 """
-function geod_dist_mat(g)
+function geod_dist_mat_fs_in(g, fs)
     d_mat = zeros(nv(g), nv(g))
-    
-    fs = floyd_warshall_shortest_paths(g)
     
     for i in vertices(g)
         for j in vertices(g)
@@ -24,6 +21,17 @@ function geod_dist_mat(g)
     d_mat
 end
 
+
+"""
+Calculates matrix of shortest path distances.
+Uses Floyd Warshal algorithm and needs a WeightedGraph
+"""
+function geod_dist_mat(g)
+    fs = floyd_warshall_shortest_paths(g)
+    geod_dist_mat_fs_in(g, fs)
+end
+
+
 """
 Returns path lenght by adding length of edges in path
 when given an array of nodes in the path (no multi-edges)
@@ -39,7 +47,7 @@ function path_length(path, g::SimpleWeightedDiGraph)
     num_edges = length(path)-1
     suma = 0
     for i in 1:num_edges
-        s, d = i, i+1
+        s, d = path[i], path[i+1]
         suma += g.weights[d, s]
     end
     suma
