@@ -70,26 +70,37 @@ Flötteröd & Bierlaire 2013 (TR: Part B)
 """
 function is_spliceable(state, g, geodesic_dist_matrix)
 
-    node_a = state.Γ[state.a]
-    node_b = state.Γ[state.b]
-    node_c = state.Γ[state.c]
+    a = state.a
+    b = state.b
+    c = state.c
+
+    node_a = state.Γ[a]
+    node_b = state.Γ[b]
+    node_c = state.Γ[c]
     
     gd1 = geodesic_dist_matrix[node_a, node_b]
     gd2 = geodesic_dist_matrix[node_b, node_c]
     
+    # Excuse the mess... turns out g.weights is indexed as its transpose...
+    num_edges_Γ₁ = b - a
     Γ₁_length = 0
-    for i in state.a:state.b-1
+    for i in 1:num_edges_Γ₁        
         s, d = state.Γ[i:i+1]
-        Γ₁_length += g.weights[s,d]
+        Γ₁_length += g.weights[d, s]
     end
+    println("gd1: ", gd1)
+    println("length Γ₁: ", Γ₁_length)
          
+    num_edges_Γ₂ = c - b
     Γ₂_length = 0    
     for i in state.b:state.c-1
         s, d = state.Γ[i:i+1]
-        Γ₂_length += g.weights[s,d]
+        Γ₂_length += g.weights[d,s]
     end
+    println("gd2: ", gd2)
+    println("length Γ₂: ", Γ₂_length)
     
-    if Γ₁_length == gd1 && Γ₂_length ==gd2
+    if Γ₁_length≈gd1 && Γ₂_length≈gd2
         return true
     else
         return false

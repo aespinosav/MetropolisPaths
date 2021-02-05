@@ -1,9 +1,7 @@
 #Adjacency matrix for a braess network
-using LightGraphs, SimpleWeightedGraphs, StatsBase, MHPaths
+using LightGraphs, SimpleWeightedGraphs, StatsBase, LinearAlgebra, MHPaths
 
-"""
-Calculates matrix of shortest path distances
-"""
+
 function geod_dist_mat(g)
     d_mat = zeros(nv(g), nv(g))
     for i in vertices(g)
@@ -11,6 +9,34 @@ function geod_dist_mat(g)
     end
     d_mat
 end
+
+
+"""
+Calculates matrix of shortest path distances.
+Uses Floyd Warshal algorithm and needs a WeightedGraph
+"""
+function geod_dist_mat_fs(g)
+    d_mat = zeros(nv(g), nv(g))
+    
+    fs = floyd_warshall_shortest_paths(g)
+    
+    for i in vertices(g)
+        for j in vertices(g)
+            if i != j
+                p = enumerate_paths(fs, i, j)
+                len = 0
+                for k in 1:length(p)-1
+                    # g.weights is indexed in reverse [dst,src]
+                    len += g.weights[k+1,k]
+                end
+                d_mat[i,j] = len
+            end
+        end
+    end
+    d_mat
+end
+
+################################################################
 
 """
 Function for calculating denominator for insert prob for a particular OD pair
@@ -88,7 +114,7 @@ pp = StatsBase.Weights(ones(nv(g)))
 
 state = MicroState([1,2,3,4], 1, 2, 4)
 
-
+splice(g, pp, state)
 
 
 
@@ -128,6 +154,7 @@ o = 1
 d = 4
 
 μ = 0.5
+p_splice = 0.5
 
 p_insert = make_p_insert_with_denom(o, d, g, μ, d_mat)
 p_dist = StatsBase.Weights([p_insert(v) for v in vertices(g)])
@@ -136,3 +163,24 @@ state = MicroState([1,2,3,4], 1, 2, 4)
 
 splice(g, p_dist, state)
 
+
+###########################################################################
+###########################################################################
+using LightGraphs, SimpleWeightedGraphs, StatsBase, MHPaths
+#include("metropolis.jl")
+
+A_braess = [0 1 1 0 
+            0 0 1 1
+            0 0 0 1 
+            0 0 0 0]
+A_braess = Float64.(A_braess)
+g = SimpleWeightedDiGraph(A_braess)
+d_mat = geod_dist_mat(g)
+
+o = 1
+d = 4
+
+μ = 0.5
+p_splice = 0.5
+
+MHinstance(g, o, d, μ, p_splice)

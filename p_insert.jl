@@ -1,15 +1,3 @@
-# This function might be better off in a diffetent file
-"""
-Calculates matrix of shortest path (geodesic) distances
-"""
-function geod_dist_mat(g)
-    d_mat = zeros(nv(g), nv(g))
-    for i in vertices(g)
-        d_mat[i,:] = gdistances(g, i)
-    end
-    d_mat
-end
-
 """
 Function for calculating denominator for insert prob for a particular OD pair
 for all vertices of a graph
