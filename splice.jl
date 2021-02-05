@@ -20,6 +20,7 @@ function splice(g, p_insert, state)
     p_ν = p_insert[insertion_set]
     ν = sample(insertion_set, p_ν) # insertion node
     
+    # Distance matrix with reduced node set (set Inf distance)
     dist_mat = copy(LightGraphs.weights(g))
     for i in append!(state.Γ[1:state.a-1], state.Γ[state.c:end])
         for j in outneighbors(g, i)
@@ -36,7 +37,6 @@ function splice(g, p_insert, state)
         return state
     end
     Γ₁ = paths1
-    #println("Γ₁: ", Γ₁)
     
     ds = dijkstra_shortest_paths(g, ν, dist_mat)
     paths2 = enumerate_paths(ds, state.Γ[state.c])
@@ -44,7 +44,6 @@ function splice(g, p_insert, state)
         return state
     end
     Γ₂ = paths2
-    #println("Γ₂: ", Γ₂)
     
     if length(intersect(Γ₁, Γ₂)) > 1 # Cycle in new path
         return state
@@ -81,25 +80,12 @@ function is_spliceable(state, g, geodesic_dist_matrix)
     gd1 = geodesic_dist_matrix[node_a, node_b]
     gd2 = geodesic_dist_matrix[node_b, node_c]
     
-    # Excuse the mess... turns out g.weights is indexed as its transpose...
-    num_edges_Γ₁ = b - a
-    Γ₁_length = 0
-    for i in 1:num_edges_Γ₁        
-        s, d = state.Γ[i:i+1]
-        Γ₁_length += g.weights[d, s]
-    end
-    println("gd1: ", gd1)
-    println("length Γ₁: ", Γ₁_length)
-         
-    num_edges_Γ₂ = c - b
-    Γ₂_length = 0    
-    for i in state.b:state.c-1
-        s, d = state.Γ[i:i+1]
-        Γ₂_length += g.weights[d,s]
-    end
-    println("gd2: ", gd2)
-    println("length Γ₂: ", Γ₂_length)
+    Γ₁ = state.Γ[a:b]
+    Γ₂ = state.Γ[b:c]
     
+    Γ₁_length = path_length(Γ₁, g)
+    Γ₂_length = path_length(Γ₂, g)
+
     if Γ₁_length≈gd1 && Γ₂_length≈gd2
         return true
     else
