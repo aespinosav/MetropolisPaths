@@ -1,18 +1,17 @@
 """
 Initial function to test if sample works
 """
-function weight_func(state)
-    length(state.Γ) 
+function weight_func(state, g)
+    path_length(state.Γ, g) 
 end
 
 
 """
 Samples path using the Metropolis Hastings procedure.
 
-    mh_sample(mh, steps, b)
+    mh_sample(mh, weight_func)
     
     mh:             MHInstance object
-    steps:          Number of samples to draw
     weight_func:    Weight function associated to a state
     
 At the moment it is coded to work with the cost function 
@@ -35,7 +34,7 @@ function mh_sample(mh, weight_func)
     
     draw = rand()
     if is_spliceable(current_state, mh.g, mh.sp_dist_mat) && draw<mh.p_splice
-        candidate_state = splice(mh.g, mh.p_insert, current_state)
+        candidate_state = splice(current_state, mh.g, mh.p_insert)
     else
         candidate_state = shuffle(current_state)
     end
@@ -59,8 +58,8 @@ function mh_sample(mh, weight_func)
     len_Γ = length(current_state.Γ)
     len_Γ′= length(candidate_state.Γ)
     
-    b_i = weight_func(current_state)/(len_Γ*(len_Γ-1)*(len_Γ-2)/6)
-    b_j = weight_func(candidate_state)/(len_Γ′*(len_Γ′-1)*(len_Γ′-2)/6)
+    b_i = weight_func(current_state, mh.g)/(len_Γ*(len_Γ-1)*(len_Γ-2)/6)
+    b_j = weight_func(candidate_state, mh.g)/(len_Γ′*(len_Γ′-1)*(len_Γ′-2)/6)
     
     # Detailed balance?
     quotient =  b_j*q_ji/b_i*q_ij
