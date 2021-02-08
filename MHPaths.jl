@@ -1,6 +1,6 @@
 module MHPaths
 
-using LightGraphs, SimpleWeightedGraphs, StatsBase
+using LightGraphs, SimpleWeightedGraphs, StatsBase, LinearAlgebra
 
 export 
     # From microstate.jl    
