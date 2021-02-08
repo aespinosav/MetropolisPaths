@@ -92,3 +92,5 @@ function is_spliceable(state, g, geodesic_dist_matrix)
         return false
     end
 end
+
+is_spliceable(state, mh::MHInstance) = is_spliceable(state, mh.g, mh.sp_dist_mat)
