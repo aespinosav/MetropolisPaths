@@ -3,6 +3,8 @@ Shuffles anchor points (a, c) and pivot of a microstate for generating
 proposed states for transition in MH algorithm as in the paper 
 [Flötteröd & Bierlaire 2013 (TR: Part B) section 2.5].
 
+    shuffle(state)
+
 Returns new state
 """
 function shuffle(state)
@@ -15,7 +17,11 @@ end
 """
 Shuffles anchor points (a, c) and pivot of a microstate for generating 
 proposed states for transition in MH algorithm as in the paper 
-[Flötteröd & Bierlaire 2013 (TR: Part B) section 2.5]. Changes input `state`
+[Flötteröd & Bierlaire 2013 (TR: Part B) section 2.5].
+
+    shuffle!(state)
+        
+Changes input `state`.
 """
 function shuffle!(state)
     N = length(state.Γ)
@@ -28,6 +34,8 @@ end
 """
 Probability of having chosen anchor points a, b and c. It is a function
 of the length of the path.
+
+    p_shuffle(path, a, b, c)
 """
 function p_shuffle(path, a, b, c)
     N = length(path)

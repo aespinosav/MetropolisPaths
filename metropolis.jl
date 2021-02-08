@@ -51,7 +51,7 @@ function MHInstance(g, o, d, μ, p_splice)
     
     history = [initial_state]
     
-    p_ins_func = make_p_insert_with_denom(o, d, g, μ, dist_mat)
+    p_ins_func = make_p_insert_with_denom(o, d, g, μ, geodesic_distance_matrix)
     p_insert = zeros(N)
     for i in 1:N
         p_insert[i] = p_ins_func(i) 
