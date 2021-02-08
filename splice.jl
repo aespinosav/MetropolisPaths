@@ -2,16 +2,16 @@
 Generates new proposed state from a given microstate by doing the splicing
 procedure in Flötteröd & Bierlaire 2013 (TR: Part B).
 
-    splice(g, p_insert, state)
+    splice(state, g, p_insert)
     
+    state:      Micro state (made up of Γ, a, b, c)
     g:          Graph
     p_insert:   Probability distribution over nodes in g
-    state:      Micro state (made up of Γ, a, b, c)
 
 Given a micro state (i.e. a Path and anchor points a, c and pivot b) generates
 a proposed state (potentially the same) for a transition in the MH algorithm.
 """
-function splice(g, p_insert, state)
+function splice(state, g, p_insert)
 
     insertion_set = setdiff(vertices(g),
                             state.Γ[1:state.a],
