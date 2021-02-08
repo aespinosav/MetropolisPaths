@@ -53,3 +53,5 @@ function path_length(path, g::SimpleWeightedDiGraph)
     suma
 end
 
+path_length(path, mh::MHInstance) = path_length(path, mh.g)
+
