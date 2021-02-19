@@ -54,4 +54,6 @@ function path_length(path, g::SimpleWeightedDiGraph)
 end
 
 path_length(path, mh::MHInstance) = path_length(path, mh.g)
+path_length(state::MicroState, mh::MHInstance) = path_length(state.Γ, mh.g)
+
 

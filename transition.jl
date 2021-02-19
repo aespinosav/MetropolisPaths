@@ -47,9 +47,17 @@ function proposal_probability(old_state, new_state, p_splice, p_insert, g, M)
     end
 end
 
+proposal_probability(old_state::MicroState, new_state::MicroState, mh::MHInstance) = proposal_probability(old_state,
+                                       new_state,
+                                       mh.p_splice,
+                                       mh.p_insert,
+                                       mh.g,
+                                       mh.sp_dist_mat)
+
+
 ###
-### Note: Altenrate function (most lileley wrong)
-### 
+### Note: Alternate function (most likeley wrong)
+###
 
 """
 This is the way of calculating the `proposal_probability` verbatim from the 

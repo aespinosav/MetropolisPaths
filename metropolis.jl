@@ -26,13 +26,13 @@ shortest-path distance matrix.
     p_splice:   Probability of splicing (Constant)
 """
 function MHInstance(g, o, d, μ, p_splice)
-    
+
     N = length(vertices(g))
-    
+
     fs = floyd_warshall_shortest_paths(g)
 
     geodesic_distance_matrix = geod_dist_mat_fs_in(g, fs)
- 
+
     initial_path = enumerate_paths(fs, o, d)
 
     # Initial sampling weights uniform for the first microstate
@@ -65,4 +65,18 @@ function show(io::IO, mh::MHInstance)
     println(io, "Metropolis-Hastings instance:")
     showstr = "g:\t$(mh.g)\no:\t$(mh.o)\nd:\t$(mh.d)\nμ:\t$(mh.μ)\np_spl:\t$(mh.p_splice)"
     print(io, showstr)
+end
+
+
+"""
+Get unique paths from the history of an MHInstance
+    
+    get_unique_paths(mh::MHInstance)
+"""
+function get_unique_paths(mh::MHInstance)
+    paths = Array{Int64,1}[]
+    for s in mh.history
+        push!(paths, s.Γ)
+    end
+    unique_paths = unique(paths)
 end

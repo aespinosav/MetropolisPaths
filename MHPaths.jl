@@ -6,7 +6,7 @@ export
     # From microstate.jl    
     MicroState,
     # From metropolis.jl
-    MHInstance,
+    MHInstance, get_unique_paths,
     # From distance_mat.jl
     geod_dist_mat_fs_in, geod_dist_mat, path_length,
     # From splice.jl

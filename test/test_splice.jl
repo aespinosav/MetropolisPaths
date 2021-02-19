@@ -1,4 +1,4 @@
-using LinearAlgebra, LightGrqaphs, SimpleWeightedGraph
+using LinearAlgebra, LightGraphs, SimpleWeightedGraphs, StatsBase
 
 # Test 1: Braess directed graph (uniform p_insert)
 
@@ -6,11 +6,21 @@ A_braess = [0 1 1 0
             0 0 1 1
             0 0 0 1 
             0 0 0 0]
+            
+A_braess2 = [0 1 1 0 
+             0 0 1 1
+             0 0 0 2 
+             0 0 0 0]
+             
 A_braess = Float64.(A_braess)
+A_braess2 = Float64.(A_braess2)
+
 g = SimpleWeightedDiGraph(A_braess)
+g2 = SimpleWeightedDiGraph(A_braess2)
 p_in = StatsBase.Weights(ones(nv(g)))
+
 state = MicroState([1,2,3,4], 1, 2, 4)
-splice(g, p_in, state)
+splice(state, g, p_in)
 
 ########################################################
 
