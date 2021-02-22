@@ -60,8 +60,9 @@ function splice(state::MicroState, g::AbstractGraph, ν::Int)
     
     # Check no disallowed edges are used
     suma = 0
-    for i in 1:length(Γ₁)
-        suma += dist_mat_1[i,i+1]
+    for i in 1:length(Γ₁)-1
+        s, t = Γ₁[i], Γ₁[i+1]
+        suma += dist_mat_1[s,t]
     end
     #@show suma
     if suma == Inf
@@ -74,15 +75,16 @@ function splice(state::MicroState, g::AbstractGraph, ν::Int)
     
     # Check no disallowed edges are used
     suma = 0
-    for i in 1:length(Γ₂)
-        suma += dist_mat_1[i,i+1]
+    for i in 1:length(Γ₂)-1
+        s, t = Γ₂[i], Γ₂[i+1]
+        suma += dist_mat_2[s,t]
     end
     #@show suma
     if suma == Inf
         return state
     end
     
-    # Check no cycle has been created
+    # Check no cycle has been created in the spliced sections
     if length(intersect(Γ₁, Γ₂)) > 1 # only intersect at ν
         return state
     end

@@ -18,8 +18,10 @@ function p_insert_explicit(v, o, d, μ, d_mat, denominator)
     exp(-μ*(d_mat[o, v] +  d_mat[v, d]))/denominator
 end
 
+# TODO: Make sure this is working properly!
 """
-Returns function where denominator does not need to be passed explicitly
+Returns function where denominator does not need to be passed explicitly.
+Check that that this μ is different than the one for the weight function used to sample paths
 """
 function make_p_insert_with_denom(o, d, g, μ, d_mat)
     den = p_insert_denom(o, d, μ, g, d_mat)

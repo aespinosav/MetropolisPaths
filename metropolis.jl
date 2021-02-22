@@ -67,6 +67,10 @@ function show(io::IO, mh::MHInstance)
     print(io, showstr)
 end
 
+###
+### TODO: The MHInstanceobject struct should probably (as an option) the node coordinates of the network
+###       Mainly for ease of having everythin in the same place.
+###
 
 """
 Get unique paths from the history of an MHInstance
