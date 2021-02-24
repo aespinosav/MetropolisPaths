@@ -18,7 +18,9 @@ export
     # From transition.jl
     proposal_probability,
     # From mh_sampling
-    weight_func, mh_sample, mh_evolve! 
+    weight_func, mh_sample, mh_evolve!,
+    # From similarity.jl
+    similarity_measure
 
 include("microstate.jl")
 include("metropolis.jl")
@@ -28,5 +30,6 @@ include("shuffle.jl")
 include("p_insert.jl")
 include("transition.jl")
 include("mh_sampling.jl")
+include("similarity.jl")
 
 end
