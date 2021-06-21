@@ -14,13 +14,13 @@ export
     # From shuffle.jl
     shuffle, shuffle!, p_shuffle,
     # From p_insert.jl
-    make_p_insert_with_denom,
+    make_p_insert_with_denom, make_p_insert, make_p_insert_and_ds_o,
     # From transition.jl
     proposal_probability,
     # From mh_sampling
     weight_func, mh_sample, mh_evolve!,
     # From similarity.jl
-    similarity_measure
+    similarity_measure, similarity_curve
 
 include("microstate.jl")
 include("metropolis.jl")

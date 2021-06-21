@@ -31,6 +31,9 @@ function geod_dist_mat(g)
     geod_dist_mat_fs_in(g, fs)
 end
 
+#
+# TODO: organise methods for path_length function
+#
 
 """
 Returns path lenght by adding length of edges in path
@@ -52,8 +55,15 @@ function path_length(path, g::SimpleWeightedDiGraph)
     end
     suma
 end
-
+function path_length(path, g, dist_mat)
+    num_edges = length(path)-1
+    suma = 0
+    for i in 1:num_edges
+        s, d = path[i], path[i+1]
+        suma += dist_mat[s, d]
+    end
+    suma
+end
 path_length(path, mh::MHInstance) = path_length(path, mh.g)
 path_length(state::MicroState, mh::MHInstance) = path_length(state.Γ, mh.g)
-
 

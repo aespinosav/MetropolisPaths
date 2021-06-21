@@ -61,6 +61,35 @@ function MHInstance(g, o, d, μ, p_splice)
     MHInstance(g, o, d, geodesic_distance_matrix, μ, p_splice, p_insert, history)
 end
 
+#=
+
+#
+# This was an alternate version that tried to not calculate the full shortest path distance matrix
+# but it turns out that it is actually needed for determining if a path is spliceable...
+#
+
+function MHInstance_alt(g, o, d, μ, p_splice)
+
+    N = length(vertices(g))
+
+    p_insert, ds = make_p_insert_and_ds_o(o, d, g, μ)
+
+    # Initial microstate (shortest path from o to d)
+    initial_path = enumerate_paths(ds, d)
+    # Get a, b, and c for initial state (random sample)
+    weights_init = StatsBase.Weights(ones(length(initial_path)))
+    anchors = sample(1:length(initial_path),
+                     weights_init,
+                     3,
+                     replace=false,
+                     ordered=true)
+    initial_state = MicroState(initial_path, anchors...)
+    history = [initial_state]
+
+    MHInstance(g, o, d, geodesic_distance_matrix, μ, p_splice, p_insert, history)
+end
+=#
+
 function show(io::IO, mh::MHInstance)
     println(io, "Metropolis-Hastings instance:")
     showstr = "g:\t$(mh.g)\no:\t$(mh.o)\nd:\t$(mh.d)\nμ:\t$(mh.μ)\np_spl:\t$(mh.p_splice)"

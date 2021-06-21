@@ -1,4 +1,6 @@
 # TODO: Test more extensively to check that no cycles are introduced (I am pretty sure this is no longer happening)
+# Interestingly, introducing cycles might be desirable for RSP, although there might be a better way of sampling
+# from the RSP distribution (this might become more apparent from the raindeer paper...)
 
 """
 Draw a vertex for splicing, given a probability distribution as a vector over the vertices of a graph.
